@@ -1,0 +1,6 @@
+service_example_simple:
+  path: 'examples/service-example/simple'
+  defaults:
+    _controller: '\Drupal\service_example\Controller\ServiceExampleController::simple_example'
+  requirements:
+    _access: 'TRUE'

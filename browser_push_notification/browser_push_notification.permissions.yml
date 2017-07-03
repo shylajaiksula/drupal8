@@ -1,0 +1,4 @@
+administer browser push notification:
+  title: 'Administer Browser Push Notification'
+  description: 'User with administer permission will be able to manage configuration and send push notification'
+  restrict access: TRUE

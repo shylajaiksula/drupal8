@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @file
+ * Contains browser_push_notification.install functionality.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function browser_push_notification_uninstall() {
+  // Delete remaining general module variables.
+  \Drupal::state()->delete('browser_subscriptions');
+}
+
+/**
+ * Implements hook_schema().
+ */
+function browser_push_notification_schema() {
+  $schema['browser_subscriptions'] = [
+    'description' => 'The base table for storing browser subscription details',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => "The id for the table that is autoincremental id.",
+      ],
+      'subscription_data' => [
+        'description' => 'Store authorization details and crypto key.',
+        'type' => 'text',
+        'size' => 'normal',
+        'not null' => TRUE,
+      ],
+      'subscription_endpoint' => [
+        'description' => 'Stores browser subscription endpoint.',
+        'type' => 'text',
+        'size' => 'normal',
+        'not null' => TRUE,
+      ],
+      'registered_on' => [
+        'description' => 'Time when an ID is registered.',
+        'type' => 'int',
+        'size' => 'normal',
+        'not null' => TRUE,
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
+  return $schema;
+}

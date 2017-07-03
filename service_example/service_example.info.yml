@@ -1,0 +1,5 @@
+name: 'Service example'
+type: module
+description: 'An example module showing how to create and use a service.'
+package: 'Custom'
+core: 8.x

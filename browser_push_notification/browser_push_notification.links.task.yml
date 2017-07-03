@@ -1,0 +1,14 @@
+browser_push_notification.config:
+  route_name: browser_push_notification.config
+  base_route: browser_push_notification.config
+  title: 'Browser Push Notification Configuration'
+
+browser_push_notification.subscription_list:
+  route_name: browser_push_notification.subscription_list
+  base_route: browser_push_notification.config
+  title: 'Browser Push Notification Subscription List'
+
+browser_push_notification.send_notification:
+  route_name: browser_push_notification.send_notification
+  base_route: browser_push_notification.config
+  title: 'Send Browser Push Notifications'  

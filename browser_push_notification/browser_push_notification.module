@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Contains browser_push_notification.module functionality.
+ */
+
+/**
+ * Implements hook_page_attachments_alter() for loaing libraries.
+ */
+function browser_push_notification_page_attachments_alter(array &$build) {
+  $bpn_public_key = \Drupal::config('browser_push_notification.settings')->get('bpn_public_key');
+  $build['#attached']['drupalSettings']['browser_push_notification']['bpn_public_key'] = $bpn_public_key;
+  if (!empty($bpn_public_key)) {
+    $build['#attached']['library'][] = 'browser_push_notification/service-worker';
+  }
+}

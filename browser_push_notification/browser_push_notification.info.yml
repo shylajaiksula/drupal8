@@ -1,0 +1,6 @@
+name: Browser Push Notification
+type: module
+core: 8.x
+description: 'Browser Push Notification.'
+package: Custom
+configure: 'browser_push_notification.config'

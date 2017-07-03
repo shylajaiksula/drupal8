@@ -1,0 +1,4 @@
+d8_events.description:
+  title: 'd8 Events Example'
+  description: 'Example of dispatching and subscribing to events.'
+  route_name: d8_events.description

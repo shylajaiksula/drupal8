@@ -1,0 +1,8 @@
+# Define a route for our event dispatching example.
+d8_events.description:
+  path: 'd8_events/events-example'
+  defaults:
+    _form: '\Drupal\d8_events\Form\EventsDispactherExampleForm'
+    _title: 'D8 Events Example'
+  requirements:
+    _permission: 'access content'

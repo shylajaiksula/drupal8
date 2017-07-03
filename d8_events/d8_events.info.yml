@@ -1,0 +1,10 @@
+name: D8 Events example
+type: module
+description: Provides an example of subscribing to and dispatching events.
+package: Custom
+
+# Information added by Drupal.org packaging script on 2017-03-15
+version: '8.x-1.x-dev'
+core: '8.x'
+project: 'Custom'
+datestamp: 1489606986

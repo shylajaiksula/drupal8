@@ -1,0 +1,31 @@
+{
+    "name": "drupal/browser_push_notification",
+    "description": "Browser Push Notification",
+    "type": "drupal-module",
+    "homepage": "https://drupal.org/project/browser_push_notification",
+    "authors": [
+        {
+            "name": "Shylaja R (Iksula)",
+            "homepage": "https://www.drupal.org/u/shylajaphp",
+            "role": "Maintainer"
+        },
+        {
+            "name": "Shylaja Norris (darol100)",
+            "email": "shylajaphp@gmail.com",
+            "homepage": "https://www.drupal.org/u/shylajaphp",
+            "role": "Co-maintainer"
+        }
+    ],
+    "support": {
+        "issues": "https://drupal.org/project/issues/browser_push_notification",
+        "irc": "irc://irc.freenode.org/drupal-contribute",
+        "source": "https://cgit.drupalcode.org/browser_push_notification"
+    },
+    "license": "GPL-2.0+",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.6.0",
+        "minishlink/web-push": "^1.4"
+    }
+}
+
