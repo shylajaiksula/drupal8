@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Contains node_limit.module
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+
+function node_limit_help($route_name, RouteMatchInterface $route_match)
+{
+  switch ($route_name) {
+    // Main module help for the node_limit module.
+    case 'help.page.node_limit':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Allows admins to restrict the number of nodes that may be created.') . '</p>';
+      return $output;
+    break;
+  }
+}
+function node_limit_entity_presave(Drupal\Core\Entity\EntityInterface $entity) { 
+  if ($entity->getEntityType()->id() == 'node') {
+    print_r($entity->getType());
+    $entity->setTitle('The new Title');
+    die;
+    //CAUTION : Do not save here, because it's automatic.
+  }
+}

@@ -1,0 +1,36 @@
+# NodeLimit routing definition
+entity.node_limit.list:
+  path: '/admin/structure/node_limit'
+  defaults:
+    _controller: '\Drupal\node_limit\Controller\NodeLimitListController::node_limitList'
+    _title: 'Node Limit List'
+  requirements:
+    _permission: 'administer node limit permission' 
+  options:
+    _admin_route: TRUE
+
+entity.node_limit.add_form:
+  path: '/admin/structure/node_limit/add'
+  defaults:
+    _form: '\Drupal\node_limit\Form\NodeLimitForm'
+    _title: 'Add NodeLimit'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.node_limit.edit_form:
+  path: '/admin/structure/node_limit/{node_limit}/edit'
+  defaults:
+    _form: '\Drupal\node_limit\Form\NodeLimitForm'
+    _title: 'Edit NodeLimit'
+  requirements:
+    _permission: 'administer site configuration'
+
+
+entity.node_limit.delete_form:
+  path: '/admin/structure/node_limit/{node_limit}/delete'
+  defaults:
+    _form: '\Drupal\node_limit\Form\NodeLimitDeleteForm'
+    _title: 'Delete Node Limit'
+  requirements:
+    _permission: 'administer site configuration'
+

@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @file
+ * Module to restrict the number of nodes by user.
+ */
+
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_node_limit_element().
+ */
+function node_limit_user_node_limit_element($lid = 0) {
+  $limit = node_limit_user_node_limit_load($lid);
+  if (!empty($limit)) {
+    $user_entity = User::loadMultiple($limit);
+  }
+  $form['chk_node_limit_user'] = [
+    '#type' => 'checkbox',
+    '#title' => 'User',
+    '#default_value'  => !empty($limit) ? 1 : '',
+  ];
+  $form['node_limit_user'] = [
+    '#type' => 'entity_autocomplete',
+    '#title' => t('User'),
+    '#autocomplete_path' => 'user/autocomplete',
+    '#target_type' => 'user',
+    '#tags' => TRUE,
+    '#default_value' => $user_entity,
+    '#selection_settings' => ['include_anonymous' => FALSE,'include_admin' => FALSE],
+  ];
+  return $form;
+}
+
+/**
+ * Implements hook_node_limit_load().
+ */
+function node_limit_user_node_limit_load($lid) {
+  $select = db_select('node_limit_user', 'nlu');
+  $select->join('users', 'u', 'u.uid = nlu.uid');
+  $select->join('users_field_data', 'u_field_data', 'u.uid = u_field_data.uid');
+  $select->fields('nlu')
+    ->condition('lid', $lid);
+  $info = $select->execute()->fetchAll();
+  if (empty($info)) {
+    return [];
+  }
+  else {
+    $node_limit_user = [];
+    foreach ($info as $key => $object) {
+      $node_limit_user[] = $object->uid;
+    }
+  }
+  return $node_limit_user;
+}

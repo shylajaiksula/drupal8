@@ -1,0 +1,5 @@
+node_limit.settings:
+  title: 'Node Limit'
+  description: 'Node Limit'
+  route_name: entity.node_limit.list
+  parent: system.admin_structure

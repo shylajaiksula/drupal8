@@ -1,0 +1,101 @@
+<?php
+
+/**
+ * @file
+ * Module to restrict the number of nodes by role.
+ */
+
+use \Drupal\user\Entity\Role;
+
+/**
+ * Implements hook_node_limit_applies_in_context().
+ */
+function node_limit_role_node_limit_applies_in_context($lid, $node, $user) {
+  $limit = node_limit_role_node_limit_load($lid);
+  $applies = NODE_LIMIT_LIMIT_DOESNT_APPLY;
+  if (empty($limit)) {
+    $applies = NODE_LIMIT_LIMIT_NEUTRAL;
+  }
+  elseif (!empty($user)) {
+    $isRoleAnonymous = $limit['node_limit_role']['rid'] == DRUPAL_ANONYMOUS_RID;
+    $isRoleAuth = $limit['node_limit_role']['rid'] == DRUPAL_AUTHENTICATED_RID;
+    if (isset($user->roles[$limit['node_limit_role']['rid']]) || ($user->uid > 0 && $isRoleAnonymous) || ($user->uid == 0 && $isRoleAuth)) {
+      $applies = NODE_LIMIT_LIMIT_DOES_APPLY;
+    }
+  }
+  return array('node_limit_role' => $applies);
+}
+
+/**
+ * Implements hook_node_limit_sql().
+ */
+function node_limit_role_node_limit_sql($lid, SelectQuery $select) {
+  $limit = node_limit_role_node_limit_load($lid);
+  if (empty($limit)) return;
+  
+  if ($limit['node_limit_role']['rid'] == DRUPAL_ANONYMOUS_RID) {
+    $select->condition('uid', 0);
+  } 
+  elseif ($limit['node_limit_role']['rid'] == DRUPAL_AUTHENTICATED_RID) {
+    $select->condition('uid', 0, '!=');
+  } 
+  else {
+    $subselect = db_select('users_roles', 'ur')
+      ->fields('ur', array('uid'))
+      ->condition('rid', $limit['node_limit_role']['rid']);
+    $select->condition('uid', $subselect, 'IN');
+  }
+}
+
+/**
+ * Implements hook_node_limit_element().
+ */
+function node_limit_role_node_limit_element($lid = 0) {
+  
+  $limit = node_limit_role_node_limit_load($lid);
+  $role = !empty($limit['node_limit_role']['role']) ? $limit['node_limit_role']['role'] : '';
+  $roles = Role::loadMultiple();
+  $user_roles = array();
+   if (!empty($roles)) {
+     foreach($roles as $key=>$roleobject) {
+       if($key!= 'anonymous' && $key!= 'authenticated')
+       $user_roles[$key] = ucfirst($key);
+     }
+   }
+  
+  if (!empty($roles)) {
+  
+    $form['chk_node_limit_role'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Role',
+      '#checked'=>TRUE,
+      '#default_value' => !empty($limit['node_limit_role']['role']) ? 1 : 0
+    ];
+    $form['node_limit_role'] = [
+        '#type' => 'select',
+        '#title' => t('Role'),
+        '#options' => $user_roles,
+        '#default_value' => $role
+    ];
+    return $form;
+  }
+}
+
+/**
+ * Implements hook_node_limit_load().
+ */
+function node_limit_role_node_limit_load($lid) {
+  $select = db_select('node_limit_role', 'nlr');
+  $select->fields('nlr')
+    ->condition('lid', $lid);
+
+  $info = $select->execute()->fetchAssoc();
+  if (empty($info['role'])) {
+    return array();
+  }
+  return array(
+    'node_limit_role' => array(
+      'role' => $info['role'],
+       )
+  );
+}

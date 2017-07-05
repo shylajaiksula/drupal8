@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @file
+ * Module to restrict the number of nodes by role.
+ */
+
+use Drupal\user\Entity\Role;
+
+/**
+ * Implements hook_node_limit_element().
+ */
+function node_limit_userofrole_node_limit_element($lid = 0) {
+  $limit = node_limit_userofrole_node_limit_load($lid);
+  $role = !empty($limit['node_limit_userofrole']['role']) ? $limit['node_limit_userofrole']['role'] : '';
+  $roles = Role::loadMultiple();
+  $user_roles = [];
+  if (!empty($roles)) {
+    foreach ($roles as $key => $roleobject) {
+       if ($key!='anonymous' && $key!='authenticated')
+       $user_roles[$key] = ucfirst($key);
+     }
+   }
+  if (!empty($user_roles)) {
+    $form['chk_node_limit_userofrole'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Users of Role',
+      '#default_value' => !empty($limit['node_limit_userofrole']['role']) ? 1 : ''
+    ];
+    $form['node_limit_userofrole'] = [
+      '#type' => 'select',
+      '#title' => t('Users of Role'),
+      '#options' => $user_roles,
+      '#default_value' => $role
+    ];
+    
+    return $form;
+  }
+
+}
+
+/**
+ * Implements hook_node_limit_load().
+ */
+function node_limit_userofrole_node_limit_load($lid) {
+  $select = db_select('node_limit_userofrole', 'nlr');
+  $select->fields('nlr')
+    ->condition('lid', $lid);
+  $info = $select->execute()->fetchAssoc();
+  if (empty($info['role'])) {
+    return array();
+  }
+  return array(
+    'node_limit_userofrole' => array(
+    'role' => $info['role']
+    )
+  );
+}

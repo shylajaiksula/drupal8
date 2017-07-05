@@ -1,0 +1,4 @@
+node_limit.settings:
+  route_name: entity.node_limit.list
+  base_route: entity.node_limit.list
+  title: 'Node Limit'

@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * @file
+ * Module to restrict the number of nodes by content type.
+ */
+
+ use Drupal\node\Entity\NodeType;
+
+ /**
+ * Implements hook_node_limit_element().
+ */
+function node_limit_type_node_limit_element($lid = 0) {
+  $limit = node_limit_type_node_limit_load($lid);
+  $type = !empty($limit['node_limit_type']) ? $limit['node_limit_type'] : '';
+  $types = array();
+  $all_content_types = NodeType::loadMultiple();
+  foreach ($all_content_types as $machine_name => $content_type) {
+    $types[$machine_name] = $content_type->label() ;
+   
+  }
+  $form['chk_node_limit_type'] = [
+    '#type' => 'checkbox',
+    '#title' => 'Content Type',
+    '#default_value' => !empty($limit['node_limit_type']) ? 1 : ''
+  ];
+  $form['node_limit_type'] = [
+    '#type' => 'select',
+    '#title' => t('Content Type'),
+    '#options' => $types,
+    '#default_value' => $type
+  ];
+  return $form;
+
+}
+
+/**
+ * Implements hook_node_limit_load().
+ */
+function node_limit_type_node_limit_load($lid) {
+  $select = db_select('node_limit_type', 'nlt')
+    ->fields('nlt')
+    ->condition('lid', $lid);
+
+  $info = $select->execute()->fetchAssoc();
+  if (empty($info['lid'])) {
+    return array();
+  }
+  return array('node_limit_type' => $info['type']);
+}
+

@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Installation functions for module node_limit_userofrole.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function node_limit_userofrole_schema() {
+  $schema['node_limit_userofrole'] = array(
+    'description' => 'The table for applying node limits to each user of a given role',
+    'fields' => array(
+      'lid' => array(
+        'description' => 'The {node_limit}.lid',
+        'type' => 'int',
+        'not null' => TRUE
+      ),
+      'role' => array(
+        'description' => 'The {role} to which this limit applies',
+        'type' => 'varchar',
+        'length' => 82,
+         'default' => '',
+         'not null' => TRUE,
+      )
+    ),
+    //the limit-user combination is unique
+    /**
+     * this means that in the future, we may allow a limit to be applied to more
+     * than one user.  right now, though, its one-user-per-limit
+     */
+    'primary key' => array('lid', 'role')
+  );
+
+  return $schema;
+}
